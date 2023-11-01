@@ -1,26 +1,37 @@
 <script setup lang="ts">
 import QiNiuVideoItem from '@/components/commonComponents/QiNiuVideoItem.vue'
+import QINiuVideoSkeleton from '@/components/commonComponents/QINiuVideoSkeleton.vue'
+import { ref } from 'vue'
+const count = ref(1)
+const loadVideo = () => {
+  count.value += 3
+}
 </script>
 
 <template>
-  <div class="video-list-container">
-    <div class="list-item" v-for="i in 20" :key="i"><QiNiuVideoItem /></div>
+  <div
+    class="video-list-container"
+    v-infinite-scroll="loadVideo"
+    infinite-scroll-distance="650"
+    infinite-scroll-delay="100"
+  >
+    <div class="list-item" v-for="i in 10" :key="i"><QiNiuVideoItem /></div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .video-list-container {
-  flex: 1;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  background-color: pink;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 每行四个元素，每个元素平均分配剩余空间 */
+  gap: 15px; /* 列之间的间距 */
   width: 80%;
   margin: 0 auto;
+  margin-top: 50px;
+
   .list-item {
-    width: 23%;
-    height: 250px;
-    border: 1px solid #000;
+    width: 100%;
+    aspect-ratio: 10/8;
+    max-height: 270px;
     margin-bottom: 50px;
   }
 }
