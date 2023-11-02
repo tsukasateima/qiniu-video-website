@@ -1458,6 +1458,11 @@ execa@^7.1.1:
     signal-exit "^3.0.7"
     strip-final-newline "^3.0.0"
 
+fancy-components@^0.0.23:
+  version "0.0.23"
+  resolved "https://registry.npmmirror.com/fancy-components/-/fancy-components-0.0.23.tgz#e9b47ce9ec05a1f4a74d5fa20f2e0ebc8f34c3ff"
+  integrity sha512-b+EzFswi2DqrvYEFOlfMT1XGv4UgkJ4rz8/XJ0V5xyV4djLATlmFFA+9OG+/brxeMR8WXZBE1a6J3g1/ExUpfA==
+
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.npmmirror.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"

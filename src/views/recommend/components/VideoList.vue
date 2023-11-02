@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import QiNiuVideoItem from '@/components/commonComponents/QiNiuVideoItem.vue'
 import QINiuVideoSkeleton from '@/components/commonComponents/QINiuVideoSkeleton.vue'
+import QiNiuLogin from '@/components/login/QiNiuLogin.vue'
 import { ref } from 'vue'
 const count = ref(1)
 const loadVideo = () => {
@@ -9,6 +10,7 @@ const loadVideo = () => {
 </script>
 
 <template>
+  <QiNiuLogin />
   <div
     class="video-list-container"
     v-infinite-scroll="loadVideo"

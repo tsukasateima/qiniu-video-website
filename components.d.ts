@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElInput: typeof import('element-plus/es')['ElInput']
     ElMenu: typeof import('element-plus/es')['ElMenu']
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
@@ -29,6 +30,7 @@ declare module 'vue' {
     QiNiuFooter: typeof import('./src/components/commonComponents/QiNiuFooter.vue')['default']
     QiniuHeader: typeof import('./src/components/commonConponents/qiniu-header.vue')['default']
     QiNiuHeader: typeof import('./src/components/commonComponents/QiNiuHeader.vue')['default']
+    QiNiuLogin: typeof import('./src/components/login/QiNiuLogin.vue')['default']
     QiNiuSearch: typeof import('./src/components/commonComponents/QiNiuSearch.vue')['default']
     QiNiuVideoItem: typeof import('./src/components/commonComponents/QiNiuVideoItem.vue')['default']
     QINiuVideoSkeleton: typeof import('./src/components/commonComponents/QINiuVideoSkeleton.vue')['default']
