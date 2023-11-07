@@ -1,27 +1,12 @@
 <script setup lang="ts">
 import QiNiuSearch from './QiNiuSearch.vue'
 import QiNiuAvatar from './QiNiuAvatar.vue'
-import { nanoid } from 'nanoid'
-import { ref, reactive } from 'vue'
-const videoCategories = [
-  { id: nanoid(), name: '首页' },
-  { id: nanoid(), name: '热门视频' },
-  { id: nanoid(), name: '体育视频' }
-]
-const activeCategory = reactive(videoCategories[0])
 </script>
 
 <template>
   <div class="qiniu-header-bg-container">
     <div class="qiniu-header-container">
-      <nav class="start-container">
-        <span
-          v-for="category in videoCategories"
-          :key="category.id"
-          :style="{ color: category.id === activeCategory.id ? 'pink' : '#fff' }"
-          >{{ category.name }}</span
-        >
-      </nav>
+      <nav class="start-container"></nav>
       <div class="middle-container">
         <QiNiuSearch />
       </div>

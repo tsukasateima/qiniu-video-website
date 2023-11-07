@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+const userStore = useUserStore()
 const showSmall = ref(true)
 const mouseoverSmall = () => {
   showSmall.value = false
@@ -8,34 +10,65 @@ const mouseoverSmall = () => {
 const mousemoveLarge = () => {
   showSmall.value = true
 }
+const logout = () => {
+  userStore.logout()
+}
+console.log('dxcscx', userStore.token, 'sxa')
 </script>
 
 <template>
   <div class="end-container">
-    <transition name="fade">
-      <div class="personal-info-container" @mouseover="mouseoverSmall" v-show="showSmall">
-        <img src="@/assets/img/user/icon-user.png" alt="" />
-      </div>
-    </transition>
-    <transition name="fade">
-      <div class="personal-info-focus-container" @mouseleave="mousemoveLarge" v-show="!showSmall">
-        <img src="@/assets/img/user/icon-user.png" alt="" />
-        <div class="person-info">
-          <span style="font-size: 20px">姓名</span>
-          <div class="social-infos">
-            <div class="attention-num">
-              <span>151</span>
-              <span style="margin-right: 15px">关注人数</span>
+    <div class="end-login-container" v-if="userStore.isLogin()">
+      <transition name="fade">
+        <div class="personal-info-container" @mouseover="mouseoverSmall" v-show="showSmall">
+          <img :src="userStore.userInfo.avatar" alt="" />
+        </div>
+      </transition>
+      <transition name="fade">
+        <div
+          class="personal-info-focus-container"
+          @mouseleave="mousemoveLarge"
+          v-if="!showSmall && userStore.isLogin()"
+        >
+          <img :src="userStore.userInfo.avatar" alt="" />
+          <div class="person-info">
+            <span style="font-size: 20px" class="hover">{{ userStore.userInfo.nickName }}</span>
+            <div class="social-infos">
+              <div class="attention-num">
+                <span>{{ userStore.follows }}</span>
+                <span style="margin-right: 15px">关注人数</span>
+              </div>
+              <div class="fans-num">
+                <span>{{ userStore.followeds }}</span>
+                <span>粉丝人数</span>
+              </div>
             </div>
-            <div class="fans-num">
-              <span>999</span>
-              <span>粉丝人数</span>
+            <div class="logout" @click="logout">退出登录</div>
+          </div>
+        </div>
+      </transition>
+    </div>
+    <div class="end-default-container" v-else>
+      <transition name="fade">
+        <div class="personal-info-container" @mouseover="mouseoverSmall" v-show="showSmall">
+          <img src="@/assets/img/user/icon-user.png" alt="" />
+        </div>
+      </transition>
+      <transition name="fade">
+        <div
+          class="personal-info-focus-container-login"
+          @mouseleave="mousemoveLarge"
+          v-if="!showSmall && !userStore.isLogin()"
+        >
+          <img src="@/assets/img/user/icon-user.png" alt="" />
+          <div class="person-info">
+            <div class="logout">
+              <router-link to="/login" target="_blank">登录</router-link>
             </div>
           </div>
-          <div class="logout">退出登录</div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </div>
 
     <span>
       <RouterLink target="_blank" to="/message" style="z-index: 4">消息</RouterLink>
@@ -159,6 +192,55 @@ const mousemoveLarge = () => {
       }
     }
   }
+  .personal-info-focus-container-login {
+    position: absolute;
+    z-index: 2;
+    left: -90px;
+    top: 20px;
+    img {
+      z-index: 2;
+      position: absolute;
+      left: 0;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+    .person-info {
+      position: relative;
+      margin-left: -100px;
+      padding-top: 60px;
+      margin-top: 50px;
+      border-radius: 10px;
+      height: 80px;
+      width: 300px;
+      background-color: #fff;
+      border: 1px solid #e7c1c1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 5px 5px 25px #e7c1c1;
+      .logout {
+        padding: 10px 0;
+        height: 30px;
+        background: linear-gradient(90deg, rgba(255, 192, 203, 0.8), rgba(255, 255, 255, 0.7));
+        width: 100%;
+        font-size: 18px;
+        line-height: 30px;
+        text-align: center;
+
+        &:hover {
+          background-color: #d3d6d9;
+        }
+        a {
+          text-decoration: none;
+          color: #999;
+          &:hover {
+            color: $main-color;
+          }
+        }
+      }
+    }
+  }
   span {
     margin-left: 30px;
     line-height: 50px;
@@ -168,7 +250,15 @@ const mousemoveLarge = () => {
     a {
       color: #fff;
       text-decoration: none;
+      &:hover {
+        color: $main-color;
+      }
     }
+  }
+}
+.hover {
+  &:hover {
+    color: $main-color;
   }
 }
 .fade-enter-active,

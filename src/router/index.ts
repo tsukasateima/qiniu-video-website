@@ -3,8 +3,12 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    component: () => import('@/views/recommend/index.vue')
+    path: '',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
+    component: () => import('@/views/home/index.vue')
   },
   {
     path: '/message',
@@ -17,6 +21,10 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/videoInfo/:id',
     component: () => import('@/views/videoInfo/index.vue')
+  },
+  {
+    path: '/login',
+    component: () => import('@/views/login/login.vue')
   }
 ]
 

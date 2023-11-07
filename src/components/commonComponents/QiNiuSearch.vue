@@ -1,43 +1,83 @@
 <script setup lang="ts">
 import { Search } from '@element-plus/icons-vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive, watch } from 'vue'
+import { getSearchHotList } from '@/api/search'
+import { useHistorySearchWordStore } from '@/stores/history'
+import { nanoid } from 'nanoid'
+import useClickOutside from '@/utils/useClickOutside'
 const searchValue = ref('')
-const searchFocus = ref(false)
-const searchInput = ref(null)
-onMounted(() => {
-  console.log(searchInput.value)
+const showInfos = ref(false)
+const searchInput = ref(null) as any
+const searchContainer = ref(null) as any
+const historySearchWordStore = useHistorySearchWordStore()
+interface HistoryItem {
+  id: string
+  name: string
+}
+const historyWords = ref([] as HistoryItem[])
+historyWords.value = historySearchWordStore.historySearchWordList
+const hotList = ref([])
+const getHotList = async () => {
+  const { list } = (await getSearchHotList()) as any
+  hotList.value = list
+  console.log(list)
+}
+const searchVideos = () => {
+  // 新增历史
+  historySearchWordStore.addHistoryWord({ id: nanoid(), name: searchValue.value })
+  // 清空搜索框
+  searchValue.value = ''
+  // 搜索框失焦
+  searchInput.value.blur()
+  // 不展示搜索信息
+  showInfos.value = false
+  // 跳转页面进行搜索
+}
+const handleHistoryClose = (tag: any) => {
+  historySearchWordStore.deleteHistoryWord(tag)
+  historyWords.value = historySearchWordStore.historySearchWordList
+}
+getHotList()
+const isClickOutSide = useClickOutside(searchContainer)
+watch(isClickOutSide, (newVal) => {
+  if (newVal) {
+    showInfos.value = false
+  }
 })
+const clearHistory = () => {
+  historySearchWordStore.clearHistoryWord()
+  historyWords.value = historySearchWordStore.historySearchWordList
+}
 </script>
 
 <template>
-  <div class="search-container">
+  <div class="search-container" ref="searchContainer">
     <el-input
       ref="searchInput"
-      @focus="searchFocus = true"
-      @blur="searchFocus = false"
+      @keyup.enter="searchVideos"
+      @focus="showInfos = true"
       placeholder="请输入搜索内容"
       v-model="searchValue"
       size="large"
       :prefix-icon="Search"
     ></el-input>
 
-    <div class="search-info" v-show="searchFocus">
+    <div class="search-info" v-show="showInfos">
       <div class="search-history-container">
         <div class="history-header">
           <span>搜索历史</span>
-          <span>清空</span>
+          <span @click="clearHistory">清空</span>
         </div>
         <div class="history-list">
-          <div class="history-item" v-for="i in 5" :key="i">
-            <span
-              >Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque eos itaque, nam odio
-              illo fugit. Nisi dicta tempora vel ducimus sint? Laborum rerum dolorum excepturi esse
-              odio nesciunt et quasi!</span
-            >
-          </div>
-          <div class="history-item" v-for="i in 5" :key="i">
-            <span>李克强ceus</span>
-          </div>
+          <el-tag
+            style="margin-right: 15px"
+            v-for="history in historyWords"
+            :key="history.id"
+            round
+            closable
+            @close="handleHistoryClose(history)"
+            >{{ history.name }}</el-tag
+          >
         </div>
       </div>
       <div class="hot-search-container">
@@ -45,12 +85,8 @@ onMounted(() => {
           <span>热搜词条</span>
         </div>
         <div class="hot-search-list">
-          <div class="list-item" v-for="i in 10" :key="i">
-            <span
-              >{{ i }}. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit impedit dicta
-              reprehenderit animi quaerat beatae rem repudiandae soluta minus. Deserunt nam illum
-              officia animi commodi quia maiores minus labore nihil?
-            </span>
+          <div class="list-item" v-for="(hotWord, i) in hotList" :key="i">
+            <span>{{ i + 1 }}. {{ hotWord }} </span>
           </div>
         </div>
       </div>
@@ -91,25 +127,11 @@ onMounted(() => {
     .history-list {
       display: flex;
       flex-wrap: wrap;
-      .history-item {
-        background-color: rgba(#faeaea, 60%);
-        border: 1px solid #e7e3e3;
-        border-radius: 5px;
-        padding: 5px 10px;
-        margin: 0 10px 5px 0;
-        span {
-          display: block;
-          max-width: 130px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
     }
     .hot-search-container {
       .hot-header {
         margin-top: 20px;
-        margin-bottom: 5px;
+        margin-bottom: 15px;
       }
       .hot-search-list {
         display: flex;
@@ -127,6 +149,9 @@ onMounted(() => {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+          }
+          &:hover {
+            color: $main-color;
           }
         }
       }

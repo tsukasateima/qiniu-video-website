@@ -9,20 +9,21 @@ const service = axios.create({
 service.interceptors.request.use((config) => {
   const token = window.localStorage.getItem('token')
   if (token) {
-    config.headers['x-access-token'] = token
+    config.headers.Authorization = token
   }
   return config
 })
 // 响应拦截器
 service.interceptors.response.use(
   (response) => {
-    const { code, result, success } = response.data
-    if (code !== 200) {
-      ElMessage.warning(success || result.message)
-      return Promise.reject(new Error(success || result.message))
-    } else {
-      return result
-    }
+    const { code, data, msg } = response.data
+    // if (code !== 200) {
+    //   ElMessage.warning(success || result.message)
+    //   return Promise.reject(new Error(success || result.message))
+    // } else {
+    //   return result
+    // }
+    return data
   },
   (error) => {
     return Promise.reject(error)
